@@ -1,34 +1,73 @@
 {
   "name": "webgpu-video-processor",
-  "version": "0.1.0",
-  "description": "High-performance video processing using WebGPU with WebGL2 fallback",
+  "version": "0.0.1",
+  "description": "A high-performance, GPU-accelerated video processing library for web applications. Built with WebGPU and WebGL2 fallback support.",
   "type": "module",
+  "main": "dist/index.js",
+  "module": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE",
+    "CHANGELOG.md"
+  ],
   "scripts": {
     "dev": "vite",
     "build": "tsc && vite build",
-    "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
     "preview": "vite preview",
+    "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
+    "format": "prettier --write \"src/**/*.{ts,tsx}\"",
     "test": "jest",
-    "test:watch": "jest --watch"
+    "test:watch": "jest --watch",
+    "test:e2e": "playwright test",
+    "test:e2e:ui": "playwright test --ui",
+    "test:e2e:debug": "playwright test --debug",
+    "test:ci": "jest && playwright test --reporter=html",
+    "test:coverage": "jest --coverage && playwright test --reporter=html && playwright show-report",
+    "prepublishOnly": "npm run build",
+    "prepare": "npm run build"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/unfoundbox/webgpu-video-processor.git"
   },
   "keywords": [
     "webgpu",
-    "webgl",
+    "webgl2",
     "video",
     "processing",
     "shaders",
-    "gpu"
+    "gpu",
+    "effects",
+    "video-processing",
+    "gpu-acceleration",
+    "video-effects",
+    "video-filters",
+    "video-transformations",
+    "video-editing"
   ],
-  "author": "Saurabh",
+  "author": "unfoundbox",
   "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/unfoundbox/webgpu-video-processor/issues"
+  },
+  "homepage": "https://github.com/unfoundbox/webgpu-video-processor#readme",
+  "engines": {
+    "node": ">=20.0.0"
+  },
   "dependencies": {
     "@webgpu/types": "^0.1.40"
   },
   "devDependencies": {
     "@jest/globals": "^29.7.0",
+    "@playwright/test": "^1.51.1",
+    "@testing-library/jest-dom": "^6.6.3",
     "@types/jest": "^29.5.12",
+    "@types/node": "^20.11.24",
     "@typescript-eslint/eslint-plugin": "^7.1.0",
     "@typescript-eslint/parser": "^7.1.0",
+    "@webgpu/types": "^0.1.57",
     "eslint": "^8.57.0",
     "jest": "^29.7.0",
     "jest-environment-jsdom": "^29.7.0",
@@ -37,5 +76,8 @@
     "ts-node": "^10.9.2",
     "typescript": "^5.2.2",
     "vite": "^5.1.4"
+  },
+  "publishConfig": {
+    "access": "public"
   }
 }

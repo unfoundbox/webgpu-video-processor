@@ -1,0 +1,32 @@
+# Source
+src/
+tests/
+examples/
+
+# Development
+.github/
+.vscode/
+.idea/
+.cursor/
+.git/
+.gitignore
+.eslintrc.json
+.prettierrc
+jest.config.ts
+jest.setup.ts
+playwright.config.ts
+tsconfig.json
+tsconfig.node.json
+vite.config.ts
+
+# Build artifacts
+coverage/
+.nyc_output/
+test-results/
+playwright-report/
+
+# Misc
+*.log
+.DS_Store
+node_modules/
+npm-debug.log* 

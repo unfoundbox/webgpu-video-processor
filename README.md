@@ -195,6 +195,7 @@ interface VideoProcessorOptions {
   height: number;
   useWebGPU?: boolean;  // Default: true
   fallbackToWebGL2?: boolean;  // Default: true
+  debug?: boolean;  // Default: false
 }
 ```
 
@@ -211,6 +212,137 @@ interface VideoProcessorOptions {
 - `edgeDetection`: Edge detection filter
 - `sharpen`: Image sharpening
 - `denoise`: Noise reduction
+
+### Detailed API Reference
+
+#### Core Methods
+
+```typescript
+class VideoProcessor {
+  constructor(options: VideoProcessorOptions);
+  
+  // Core methods
+  async init(): Promise<void>;
+  async destroy(): Promise<void>;
+  async checkGPUSupport(): Promise<boolean>;
+  
+  // Frame processing
+  async processFrame(input: HTMLVideoElement | HTMLCanvasElement): Promise<GPUTexture>;
+  async renderToCanvas(texture: GPUTexture, canvas: HTMLCanvasElement): Promise<void>;
+  
+  // Effect management
+  async applyEffect(effectName: string, options: EffectOptions): Promise<void>;
+  registerEffect(name: string, effect: CustomEffect): void;
+  
+  // Resource management
+  createTexture(descriptor: GPUTextureDescriptor): GPUTexture;
+  destroyTexture(texture: GPUTexture): void;
+}
+```
+
+#### Effect Options Interface
+
+```typescript
+interface EffectOptions {
+  // Common effect parameters
+  intensity?: number;  // Range: 0.0 to 1.0
+  
+  // Color adjustment parameters
+  brightness?: number;  // Range: -1.0 to 1.0
+  contrast?: number;   // Range: 0.0 to 2.0
+  saturation?: number; // Range: 0.0 to 2.0
+  
+  // Filter parameters
+  filterType?: 'grayscale' | 'sepia' | 'invert';
+  
+  // Custom effect parameters
+  [key: string]: any;
+}
+```
+
+#### Custom Effect Interface
+
+```typescript
+interface CustomEffect {
+  shader: string;  // WGSL or GLSL shader code
+  uniforms?: {
+    [key: string]: {
+      type: 'float' | 'vec2' | 'vec3' | 'vec4' | 'mat4';
+      default?: number | number[];
+    }
+  };
+  vertexLayout?: GPUVertexBufferLayout[];
+}
+```
+
+#### Method Details
+
+##### `constructor(options: VideoProcessorOptions)`
+Creates a new instance of the VideoProcessor with specified dimensions and options.
+
+##### `async init(): Promise<void>`
+Initializes the GPU context and sets up necessary resources. Must be called before any processing.
+
+##### `async destroy(): Promise<void>`
+Cleans up all GPU resources and destroys the processor instance.
+
+##### `async checkGPUSupport(): Promise<boolean>`
+Checks if the current environment supports WebGPU or WebGL2.
+
+##### `async processFrame(input: HTMLVideoElement | HTMLCanvasElement): Promise<GPUTexture>`
+Processes a single frame from the input source and returns a GPU texture.
+
+##### `async renderToCanvas(texture: GPUTexture, canvas: HTMLCanvasElement): Promise<void>`
+Renders a processed texture to a canvas element.
+
+##### `async applyEffect(effectName: string, options: EffectOptions): Promise<void>`
+Applies a pre-built or custom effect to the current frame.
+
+##### `registerEffect(name: string, effect: CustomEffect): void`
+Registers a custom effect for use with the processor.
+
+#### Usage Examples
+
+1. **Color Adjustment**
+   ```typescript
+   await processor.applyEffect('colorAdjust', {
+     brightness: 0.5,   // Range: -1.0 to 1.0
+     contrast: 1.2,     // Range: 0.0 to 2.0
+     saturation: 1.5    // Range: 0.0 to 2.0
+   });
+   ```
+
+2. **Filter Effects**
+   ```typescript
+   await processor.applyEffect('filter', {
+     filterType: 'grayscale',
+     intensity: 0.8
+   });
+   ```
+
+3. **Custom Effects**
+   ```typescript
+   processor.registerEffect('customEffect', {
+     shader: `
+       @vertex
+       fn vertexMain(@location(0) position: vec2f) -> @builtin(position) vec4f {
+         return vec4f(position, 0.0, 1.0);
+       }
+       
+       @fragment
+       fn fragmentMain(@location(0) uv: vec2f) -> @location(0) vec4f {
+         return vec4f(uv.x, uv.y, 0.0, 1.0);
+       }
+     `,
+     uniforms: {
+       intensity: { type: 'float', default: 1.0 }
+     }
+   });
+
+   await processor.applyEffect('customEffect', {
+     intensity: 0.5
+   });
+   ```
 
 ## Examples
 
