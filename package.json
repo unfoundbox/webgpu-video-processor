@@ -1,0 +1,38 @@
+{
+  "name": "webgpu-video-processor",
+  "version": "0.1.0",
+  "description": "A high-performance, GPU-accelerated video processing library for web applications. Built with WebGPU and WebGL2 fallback support.",
+  "type": "module",
+  "main": "dist/webgpu-video-processor.umd.js",
+  "module": "dist/webgpu-video-processor.es.js",
+  "types": "dist/types/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc && vite build",
+    "preview": "vite preview",
+    "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
+    "format": "prettier --write \"src/**/*.{ts,tsx}\""
+  },
+  "keywords": [
+    "webgpu",
+    "webgl2",
+    "video",
+    "processing",
+    "gpu",
+    "effects"
+  ],
+  "author": "",
+  "license": "MIT",
+  "devDependencies": {
+    "@types/node": "^20.11.24",
+    "@typescript-eslint/eslint-plugin": "^7.1.0",
+    "@typescript-eslint/parser": "^7.1.0",
+    "eslint": "^8.57.0",
+    "prettier": "^3.2.5",
+    "typescript": "^5.3.3",
+    "vite": "^5.1.4"
+  }
+}
