@@ -8,7 +8,9 @@ pnpm-debug.log*
 lerna-debug.log*
 
 # Dependencies
-node_modules
+node_modules/
+.pnp/
+.pnp.js
 dist
 dist-ssr
 *.local
@@ -48,4 +50,22 @@ playwright/trace/
 
 # Misc
 .DS_Store
-Thumbs.db 
+Thumbs.db
+
+# Production
+dist/
+build/
+
+# Development
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# Editor directories and files
+.vscode/
+.idea/
+*.swp
+*.swo
+.DS_Store
+*.pem 

@@ -1,51 +1,41 @@
 {
   "name": "webgpu-video-processor",
   "version": "0.1.0",
-  "description": "A high-performance, GPU-accelerated video processing library for web applications. Built with WebGPU and WebGL2 fallback support.",
+  "description": "High-performance video processing using WebGPU with WebGL2 fallback",
   "type": "module",
-  "main": "dist/webgpu-video-processor.umd.js",
-  "module": "dist/webgpu-video-processor.es.js",
-  "types": "dist/types/index.d.ts",
-  "files": [
-    "dist"
-  ],
   "scripts": {
     "dev": "vite",
     "build": "tsc && vite build",
-    "preview": "vite preview",
     "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
-    "format": "prettier --write \"src/**/*.{ts,tsx}\"",
+    "preview": "vite preview",
     "test": "jest",
-    "test:watch": "jest --watch",
-    "test:e2e": "playwright test",
-    "test:e2e:ui": "playwright test --ui",
-    "test:e2e:debug": "playwright test --debug",
-    "test:ci": "jest && playwright test --reporter=html",
-    "test:coverage": "jest --coverage && playwright test --reporter=html && playwright show-report"
+    "test:watch": "jest --watch"
   },
   "keywords": [
     "webgpu",
-    "webgl2",
+    "webgl",
     "video",
     "processing",
-    "gpu",
-    "effects"
+    "shaders",
+    "gpu"
   ],
-  "author": "",
+  "author": "Saurabh",
   "license": "MIT",
+  "dependencies": {
+    "@webgpu/types": "^0.1.40"
+  },
   "devDependencies": {
-    "@playwright/test": "^1.51.1",
-    "@testing-library/jest-dom": "^6.6.3",
+    "@jest/globals": "^29.7.0",
     "@types/jest": "^29.5.12",
-    "@types/node": "^20.11.24",
     "@typescript-eslint/eslint-plugin": "^7.1.0",
     "@typescript-eslint/parser": "^7.1.0",
-    "@webgpu/types": "^0.1.40",
     "eslint": "^8.57.0",
     "jest": "^29.7.0",
     "jest-environment-jsdom": "^29.7.0",
     "prettier": "^3.2.5",
-    "typescript": "^5.3.3",
+    "ts-jest": "^29.1.2",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.2.2",
     "vite": "^5.1.4"
   }
 }

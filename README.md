@@ -321,4 +321,126 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ## Support
 
-For support, please open an issue in the GitHub repository. 
+For support, please open an issue in the GitHub repository.
+
+## Features
+
+### Core Shader Modules
+
+1. Video Frame Shader
+   - Basic video frame rendering
+   - Efficient texture sampling
+   - Support for both WebGPU and WebGL2
+
+2. Color Adjustment Shader
+   - Brightness control
+   - Contrast adjustment
+   - Saturation manipulation
+   - Real-time parameter updates
+
+3. Filter Effects Shader
+   - Grayscale filter
+   - Sepia tone effect
+   - Color inversion
+   - Adjustable filter intensity
+
+## Installation
+
+```bash
+npm install webgpu-video-processor
+```
+
+## Usage
+
+### Basic Video Frame Rendering
+
+```typescript
+import { videoFrameShader } from 'webgpu-video-processor';
+
+// WebGPU usage
+const pipeline = await device.createRenderPipelineAsync({
+  layout: 'auto',
+  vertex: {
+    module: device.createShaderModule({
+      code: videoFrameShader.webgpu.vertex
+    }),
+    entryPoint: 'main'
+  },
+  fragment: {
+    module: device.createShaderModule({
+      code: videoFrameShader.webgpu.fragment
+    }),
+    entryPoint: 'main'
+  }
+});
+
+// WebGL2 usage
+const gl = canvas.getContext('webgl2');
+const program = createShaderProgram(gl, {
+  vertex: videoFrameShader.webgl2.vertex,
+  fragment: videoFrameShader.webgl2.fragment
+});
+```
+
+### Color Adjustments
+
+```typescript
+import { colorAdjustShader } from 'webgpu-video-processor';
+
+// Set color adjustment parameters
+const colorParams = {
+  brightness: 0.5,  // Range: -1.0 to 1.0
+  contrast: 1.2,    // Range: 0.0 to 2.0
+  saturation: 1.5   // Range: 0.0 to 2.0
+};
+```
+
+### Filter Effects
+
+```typescript
+import { filterEffectsShader } from 'webgpu-video-processor';
+
+// Apply filter effect
+const filterParams = {
+  filterType: 1,     // 1: grayscale, 2: sepia, 3: invert
+  intensity: 0.8     // Range: 0.0 to 1.0
+};
+```
+
+## Development
+
+### Setup
+
+```bash
+git clone https://github.com/yourusername/webgpu-video-processor.git
+cd webgpu-video-processor
+npm install
+```
+
+### Running Tests
+
+```bash
+npm test                 # Run all tests
+npm run test:watch      # Run tests in watch mode
+```
+
+## Browser Support
+
+- WebGPU: Chrome 113+, Edge 113+, Firefox Nightly
+- WebGL2: All modern browsers
+
+## Contributing
+
+1. Fork the repository
+2. Create your feature branch (`git checkout -b feature/amazing-feature`)
+3. Commit your changes (`git commit -m 'Add some amazing feature'`)
+4. Push to the branch (`git push origin feature/amazing-feature`)
+5. Open a Pull Request
+
+## License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+## Changelog
+
+See [CHANGELOG.md](CHANGELOG.md) for a list of changes and version history. 

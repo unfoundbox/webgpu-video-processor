@@ -18,12 +18,20 @@ export interface GPUDevice {
   createTexture(descriptor: GPUTextureDescriptor): WebGPUTexture;
   createSampler(descriptor?: GPUSamplerDescriptor): GPUSampler;
   createPipelineLayout(descriptor: GPUPipelineLayoutDescriptor): GPUPipelineLayout;
+  createRenderPipeline(descriptor: GPURenderPipelineDescriptor): GPURenderPipeline;
+  createShaderModule(descriptor: GPUShaderModuleDescriptor): GPUShaderModule;
   queue: GPUQueue;
   destroy(): void;
 }
 
 export interface GPUQueue {
   submit(commandBuffers: GPUCommandBuffer[]): void;
+  writeTexture(
+    destination: { texture: GPUTexture },
+    data: BufferSource,
+    dataLayout: { bytesPerRow: number; rowsPerImage: number },
+    size: { width: number; height: number; depthOrArrayLayers: number }
+  ): void;
 }
 
 export interface GPUCommandEncoder {
@@ -111,7 +119,24 @@ interface GPUExtent3D {
 }
 
 type GPUTextureDimension = '1d' | '2d' | '3d';
-export type GPUTextureFormat = 'rgba8unorm' | 'rgba8unorm-srgb' | 'bgra8unorm' | 'bgra8unorm-srgb';
+export type GPUTextureFormat = 
+  | 'rgba8unorm'
+  | 'rgba8unorm-srgb'
+  | 'bgra8unorm'
+  | 'bgra8unorm-srgb'
+  | 'r8unorm'
+  | 'r8uint'
+  | 'r8sint'
+  | 'r16uint'
+  | 'r16sint'
+  | 'r16float'
+  | 'rg8unorm'
+  | 'rg8uint'
+  | 'rg8sint'
+  | 'rg16uint'
+  | 'rg16sint'
+  | 'rg16float'
+  | 'rgb10a2unorm';
 export type GPUTextureUsageFlags = number;
 
 interface GPUSamplerDescriptor {
@@ -250,4 +275,179 @@ export interface WebGPUContext extends GPUContext {
 export interface WebGL2Context extends GPUContext {
   gl: WebGL2RenderingContext;
   program: WebGLProgram;
+}
+
+export interface GPUShaderModule {
+  compilationInfo(): Promise<GPUCompilationInfo>;
+  destroy(): void;
+}
+
+export interface GPUCompilationInfo {
+  messages: GPUCompilationMessage[];
+}
+
+export interface GPUCompilationMessage {
+  message: string;
+  type: 'error' | 'warning' | 'info';
+  lineNum: number;
+  linePos: number;
+}
+
+export interface GPUShaderModuleDescriptor {
+  code: string;
+  sourceMap?: object;
+}
+
+export interface GPURenderPipelineDescriptor {
+  layout: GPUPipelineLayout;
+  vertex: GPUVertexState;
+  fragment?: GPUFragmentState;
+  primitive?: GPUPrimitiveState;
+  depthStencil?: GPUDepthStencilState;
+  multisample?: GPUMultisampleState;
+}
+
+export interface GPUVertexState {
+  module: GPUShaderModule;
+  entryPoint: string;
+  buffers?: GPUVertexBufferLayout[];
+}
+
+export interface GPUFragmentState {
+  module: GPUShaderModule;
+  entryPoint: string;
+  targets: GPUColorTargetState[];
+}
+
+export interface GPUColorTargetState {
+  format: GPUTextureFormat;
+  blend?: GPUBlendState;
+  writeMask?: GPUColorWriteFlags;
+}
+
+export interface GPUBlendState {
+  color: GPUBlendComponent;
+  alpha: GPUBlendComponent;
+}
+
+export interface GPUBlendComponent {
+  srcFactor?: GPUBlendFactor;
+  dstFactor?: GPUBlendFactor;
+  operation?: GPUBlendOperation;
+}
+
+export interface GPUPrimitiveState {
+  topology?: GPUPrimitiveTopology;
+  stripIndexFormat?: GPUIndexFormat;
+  frontFace?: GPUFrontFace;
+  cullMode?: GPUCullMode;
+  unclippedDepth?: boolean;
+}
+
+export type GPUPrimitiveTopology = 
+  | 'point-list'
+  | 'line-list'
+  | 'line-strip'
+  | 'triangle-list'
+  | 'triangle-strip';
+
+export type GPUFrontFaceValue = 'ccw' | 'cw';
+export type GPUCullMode = 'none' | 'front' | 'back';
+export type GPUBlendFactor = 
+  | 'zero'
+  | 'one'
+  | 'src'
+  | 'one-minus-src'
+  | 'dst'
+  | 'one-minus-dst'
+  | 'src-alpha'
+  | 'one-minus-src-alpha'
+  | 'dst-alpha'
+  | 'one-minus-dst-alpha'
+  | 'constant'
+  | 'one-minus-constant';
+
+export type GPUBlendOperation = 
+  | 'add'
+  | 'subtract'
+  | 'reverse-subtract'
+  | 'min'
+  | 'max';
+
+export type GPUColorWriteFlags = number;
+
+export interface GPUVertexBufferLayout {
+  arrayStride: number;
+  stepMode?: GPUVertexStepMode;
+  attributes: GPUVertexAttribute[];
+}
+
+export interface GPUVertexAttribute {
+  format: GPUVertexFormat;
+  offset: number;
+  shaderLocation: number;
+}
+
+export type GPUVertexStepMode = 'vertex' | 'instance';
+export type GPUVertexFormat = 
+  | 'uint8x2'
+  | 'uint8x4'
+  | 'sint8x2'
+  | 'sint8x4'
+  | 'unorm8x2'
+  | 'unorm8x4'
+  | 'snorm8x2'
+  | 'snorm8x4'
+  | 'uint16x2'
+  | 'uint16x4'
+  | 'sint16x2'
+  | 'sint16x4'
+  | 'unorm16x2'
+  | 'unorm16x4'
+  | 'snorm16x2'
+  | 'snorm16x4'
+  | 'float16x2'
+  | 'float16x4'
+  | 'float32'
+  | 'float32x2'
+  | 'float32x3'
+  | 'float32x4'
+  | 'uint32'
+  | 'uint32x2'
+  | 'uint32x3'
+  | 'uint32x4'
+  | 'sint32'
+  | 'sint32x2'
+  | 'sint32x3'
+  | 'sint32x4';
+
+export interface GPUDepthStencilState {
+  format: GPUTextureFormat;
+  depthWriteEnabled: boolean;
+  depthCompare: GPUCompareFunction;
+  stencilWriteMask: number;
+  stencilReadMask: number;
+  front: GPUStencilState;
+  back: GPUStencilState;
+}
+
+export interface GPUStencilState {
+  compare: GPUCompareFunction;
+  failOp: GPUStencilOp;
+  depthFailOp: GPUStencilOp;
+  passOp: GPUStencilOp;
+}
+
+export interface GPUStencilOp {
+  operation: GPUStencilOperation;
+}
+
+export interface GPUFrontFace {
+  face: GPUFrontFaceValue;
+}
+
+export interface GPUMultisampleState {
+  count: number;
+  mask: number;
+  alphaToCoverageEnabled: boolean;
 } 
