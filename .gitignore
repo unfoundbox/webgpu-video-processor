@@ -26,4 +26,26 @@ dist-ssr
 
 # Environment variables
 .env
-.env.* 
+.env.*
+
+# Testing
+coverage/
+.nyc_output/
+playwright-report/
+test-results/
+playwright/.cache/
+playwright/blob-report/
+playwright/trace/
+
+# Build
+*.tsbuildinfo
+.cache/
+.temp/
+
+# IDE
+.cursor/
+*.code-workspace
+
+# Misc
+.DS_Store
+Thumbs.db 
